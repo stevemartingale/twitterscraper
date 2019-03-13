@@ -87,13 +87,10 @@ def query_single_page(query, lang, pos, retry=50, from_user=False):
 
         if not tweets:
             if json_resp:
-                pos = json_resp["min_position"]
+                pos = urllib.parse.quote(json_resp["min_position"])
             else:
                 pos = None
-            if retry > 0:
-                return query_single_page(query, lang, pos, retry - 1, from_user)
-            else:
-                return [], pos
+            return [], pos
 
         if json_resp:
             return tweets, urllib.parse.quote(json_resp["min_position"])
@@ -235,7 +232,7 @@ def query_tweets_from_user(user, limit=None):
     tweets = []
     try:
         while True:
-            new_tweets, pos = query_single_page(query, lang="", pos=pos, from_user=True)
+            new_tweets, pos = query_single_page(user, lang="", pos=pos, from_user=True)
             if len(new_tweets) == 0:
                 logger.info("Got {} tweets from username {}".format(len(tweets), user))
                 return tweets
@@ -297,7 +294,7 @@ def query_user_info(user):
     """
     Returns the scraped user data from a twitter user page.
 
-    :param user: the twitter user to web scrape its twitter page info 
+    :param user: the twitter user to web scrape its twitter page info
     """
 
     try:
