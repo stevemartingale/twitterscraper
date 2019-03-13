@@ -5,9 +5,9 @@
 Twitter Scraper tool
 """
 
-__version__ = '0.9.3'
-__author__ = 'Ahmet Taspinar'
-__license__ = 'MIT'
+__version__ = "0.9.3"
+__author__ = "Ahmet Taspinar"
+__license__ = "MIT"
 
 
 from twitterscraper.query import query_tweets
