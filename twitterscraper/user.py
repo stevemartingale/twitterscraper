@@ -15,6 +15,7 @@ class User:
         followers=0,
         likes=0,
         lists=0,
+        avatar_url=""
     ):
         self.user = user
         self.full_name = full_name
@@ -27,8 +28,9 @@ class User:
         self.followers = followers
         self.likes = likes
         self.lists = lists
+        self.avatar_url = avatar_url
 
-    def from_soup(self, tag_prof_header, tag_prof_nav):
+    def from_soup(self, tag_prof_header, tag_prof_nav, user_avatar):
         """
         Returns the scraped user data from a twitter user page.
 
@@ -43,7 +45,7 @@ class User:
         self.full_name = tag_prof_header.find(
             "a", {"class": "ProfileHeaderCard-nameLink u-textInheritColor js-nav"}
         ).text
-
+        self.avatar_url = user_avatar
         location = tag_prof_header.find(
             "span", {"class": "ProfileHeaderCard-locationText u-dir"}
         )
@@ -117,9 +119,10 @@ class User:
         soup = BeautifulSoup(html, "lxml")
         user_profile_header = soup.find("div", {"class": "ProfileHeaderCard"})
         user_profile_canopy = soup.find("div", {"class": "ProfileCanopy-nav"})
+        user_avatar = soup.find("img", {"class": "ProfileAvatar-image"})["src"]
         if user_profile_header and user_profile_canopy:
             try:
-                return self.from_soup(user_profile_header, user_profile_canopy)
+                return self.from_soup(user_profile_header, user_profile_canopy, user_avatar)
             except AttributeError:
                 pass  # Incomplete info? Discard!
             except TypeError:

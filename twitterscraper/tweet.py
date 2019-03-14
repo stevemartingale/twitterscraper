@@ -7,7 +7,7 @@ from coala_utils.decorators import generate_ordering
 @generate_ordering("timestamp", "id", "text", "user", "replies", "retweets", "likes")
 class Tweet:
     def __init__(
-        self, user, fullname, id, url, timestamp, text, replies, retweets, likes, html
+        self, user, fullname, id, url, timestamp, text, replies, retweets, likes, html, avatar_url
     ):
         self.user = user.strip("\@")
         self.fullname = fullname
@@ -18,10 +18,12 @@ class Tweet:
         self.replies = replies
         self.retweets = retweets
         self.likes = likes
-        self.html = html
+        self.html = html,
+        self.avatar_url=avatar_url
 
     @classmethod
     def from_soup(cls, tweet):
+
         return cls(
             user=tweet.find("span", "username").text or "",
             fullname=tweet.find("strong", "fullname").text or "",
@@ -50,6 +52,7 @@ class Tweet:
                 or "0"
             ),
             html=str(tweet.find("p", "tweet-text")) or "",
+            avatar_url=tweet.find("img", {"class": "avatar js-action-profile-avatar"})['src']
         )
 
     @classmethod
