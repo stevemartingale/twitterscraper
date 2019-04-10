@@ -57,6 +57,8 @@ class Tweet:
 
     @classmethod
     def from_html(cls, html):
+        html = html.replace("<a", " <a")
+        html = ' '.join(html.split())
         soup = BeautifulSoup(html, "lxml")
         tweets = soup.find_all("li", "js-stream-item")
         if tweets:
